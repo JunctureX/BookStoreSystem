@@ -16,7 +16,9 @@ def create_book(data):
         publisher_id=data.get('publisher_id'),
         publish_date=data.get('publish_date'),
         stock_quantity=data.get('stock_quantity', 0),
-        description=data.get('description')
+        description=data.get('description'),
+        cover_link=data.get('cover_link'),
+        rating=data.get('rating'),
     )
     db.session.add(new_book)
     db.session.commit()
@@ -33,6 +35,8 @@ def update_book(book_id, data):
         book.publish_date = data.get('publish_date', book.publish_date)
         book.stock_quantity = data.get('stock_quantity', book.stock_quantity)
         book.description = data.get('description', book.description)
+        book.cover_link = data.get('cover_link', book.cover_link)
+        book.rating = data.get('rating', book.rating)
         db.session.commit()
         return book
     return None

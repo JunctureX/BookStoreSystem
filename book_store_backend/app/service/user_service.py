@@ -6,6 +6,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
+def user_login(user_id, password_hash):
+    return True
+
 def get_all_users():
     return User.query.all()
 

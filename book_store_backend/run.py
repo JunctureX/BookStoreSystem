@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from flask.cli import AppGroup
+from flask_cors import CORS
 from werkzeug.security import generate_password_hash
 import click
 
@@ -24,6 +25,13 @@ print(f"Database URL: {app.config['SQLALCHEMY_DATABASE_URI']}")
 db.init_app(app)
 migrate = Migrate(app, db)
 jwt = JWTManager(app)
+
+CORS(
+    app,
+    resources={r"/api/*": {"origins": Config.CORS_ORIGINS}},
+    supports_credentials=True  # 允许携带凭证（如 cookies, authorization headers）
+)
+
 
 # 注册蓝图
 app.register_blueprint(api_bp, url_prefix='/api')

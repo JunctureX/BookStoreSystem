@@ -15,7 +15,7 @@ CREATE TABLE publishers (
     id SERIAL PRIMARY KEY,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    publisher_name VARCHAR(200)
+    publisher_name VARCHAR(200) UNIQUE
 );
 
 -- 创建类别表
@@ -41,7 +41,7 @@ CREATE TABLE books (
     stock_quantity INTEGER NOT NULL DEFAULT 0,
     description TEXT,
     cover_link VARCHAR(255),
-    rating DECIMAL(10,2),
+    rating  DECIMAL(10,2),
     FOREIGN KEY (publisher_id) REFERENCES publishers(id),
     CHECK (stock_quantity >= 0)
 );

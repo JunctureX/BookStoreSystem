@@ -76,10 +76,10 @@ export const borrow = createRestfulAPI('/borrow');
 
 export const auth = {
     login(data){
-        return http.post("/login",data,{})
+        return http.post("/auth/login",data,{})
     },
     register(data){
-        return http.post("/register",data,{})
+        return http.post("/auth/register",data,{})
     }
 }
 

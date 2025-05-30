@@ -25,9 +25,7 @@ export default ({mode}) => {
     },
     server: {
       port: 3000,
-      host: '0.0.0.0',
-      open: false,
-      // base: "./ ", //生产环境路径
+    
       proxy: {
         '/api': {
           target: env.VITE_APP_SERVER_URL,
