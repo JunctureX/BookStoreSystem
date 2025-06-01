@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
 from app.service.user_service import (
-    get_all_users, get_user_by_id, create_user, update_user, delete_user, book_recommendation
+    get_all_users, get_user_by_id, create_user, update_user, delete_user, book_recommendation, deepseek_response,
 )
 
 class UserList(Resource):
@@ -50,4 +50,10 @@ class UserRecommendation(Resource):
         print("request for userid:", user_id)
         recommendation_ids = book_recommendation(user_id)
         return {"id": user_id, "recommendation_list": recommendation_ids}, 200
-    
+
+class Deepseek(Resource):
+    def get(self, user_input):
+        print("Received input:", user_input)
+        response = deepseek_response(user_input)
+        return {"response": response}, 200
+

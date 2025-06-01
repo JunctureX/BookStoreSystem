@@ -17,6 +17,10 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import random
 from sqlalchemy import desc
+import os
+from azure.ai.inference import ChatCompletionsClient
+from azure.ai.inference.models import SystemMessage, UserMessage
+from azure.core.credentials import AzureKeyCredential
 
 def user_login(user_id, password_hash):
     return True
@@ -208,3 +212,30 @@ def book_recommendation(user_id, limit=5):
          return get_top_rated_books_randomly()
     print(recommended_books)
     return recommended_book_ids
+
+def deepseek_response(user_input):
+    import os
+    from azure.ai.inference import ChatCompletionsClient
+    from azure.ai.inference.models import SystemMessage, UserMessage
+    from azure.core.credentials import AzureKeyCredential
+    os.environ["GITHUB_TOKEN"] = "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"
+    token = os.environ["GITHUB_TOKEN"] 
+    endpoint = "https://models.github.ai/inference"
+    model = "deepseek/DeepSeek-V3-0324"
+    client = ChatCompletionsClient(
+        endpoint=endpoint,
+        credential=AzureKeyCredential(token),
+    )
+    response = client.complete(
+        messages=[
+            SystemMessage("你是图书销售综合管理与智能服务平台小助手，书籍信息基于豆瓣平台"),
+            UserMessage(user_input),
+        ],
+        temperature=1.0,
+        top_p=1.0,
+        max_tokens=1000,
+        model=model
+    )
+    print(response.choices[0].message.content)
+    return response.choices[0].message.content
+    
