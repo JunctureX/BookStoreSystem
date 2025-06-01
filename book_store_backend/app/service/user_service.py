@@ -214,6 +214,7 @@ def book_recommendation(user_id, limit=5):
     return recommended_book_ids
 
 def deepseek_response(user_input):
+    os.environ["GITHUB_TOKEN"] = "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"
     token = os.environ["GITHUB_TOKEN"] 
     endpoint = "https://models.github.ai/inference"
     model = "deepseek/DeepSeek-V3-0324"
