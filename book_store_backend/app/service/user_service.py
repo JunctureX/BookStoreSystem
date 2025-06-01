@@ -1,10 +1,22 @@
 # book_store_backend/app/service/user_service.py
-from app.models import User, Book, Order, db
+from app.models import User, Book, Order, Review, db
 from werkzeug.security import generate_password_hash
 from collections import Counter
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+from collections import defaultdict, Counter
+from sqlalchemy import func
+import math
+from collections import defaultdict, Counter
+from sqlalchemy import func
+import math
+import re
+import jieba
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import random
+from sqlalchemy import desc
 
 def user_login(user_id, password_hash):
     return True
@@ -46,69 +58,153 @@ def delete_user(user_id):
         return True
     return False
 
-def book_recommendation(user_id):
-    # 获取用户的历史购买书籍
-    print('recommendataion for :', user_id)
-    user = get_user_by_id(user_id)
-    if not user:
+def recommend_by_collaborative_filtering(user_id, user_ratings, excluded_book_ids):
+    """基于协同过滤的推荐：使用用户-用户相似度"""
+    similar_users = find_similar_users(user_id, user_ratings, k=5)
+    book_scores = defaultdict(float)
+    similarity_sum = defaultdict(float)
+    for similar_user_id, similarity in similar_users:
+        similar_user_reviews = Review.query.filter_by(user_id=similar_user_id).all()
+        similar_user_ratings = {review.book_id: review.rating for review in similar_user_reviews}
+        for book_id, rating in similar_user_ratings.items():
+            if book_id not in excluded_book_ids:
+                book_scores[book_id] += similarity * rating
+                similarity_sum[book_id] += similarity
+    normalized_scores = [
+        (book_id, score / similarity_sum[book_id]) 
+        for book_id, score in book_scores.items() 
+        if similarity_sum[book_id] > 0
+    ]
+    return sorted(normalized_scores, key=lambda x: x[1], reverse=True)
+
+def find_similar_users(target_user_id, target_user_ratings, k=5):
+    """找到与目标用户最相似的K个用户"""
+    all_users = User.query.join(Review).group_by(User.id).having(func.count(Review.id) > 0).all()
+    user_similarities = []
+    for user in all_users:
+        if user.id == target_user_id:
+            continue
+        user_reviews = Review.query.filter_by(user_id=user.id).all()
+        user_ratings = {review.book_id: review.rating for review in user_reviews}
+        common_books = set(target_user_ratings.keys()) & set(user_ratings.keys())
+        if len(common_books) < 3:
+            continue
+        dot_product = sum(target_user_ratings[book_id] * user_ratings[book_id] for book_id in common_books)
+        target_norm = math.sqrt(sum(rating ** 2 for book_id, rating in target_user_ratings.items() if book_id in common_books))
+        user_norm = math.sqrt(sum(rating ** 2 for book_id, rating in user_ratings.items() if book_id in common_books))
+        if target_norm == 0 or user_norm == 0:
+            continue
+        similarity = dot_product / (target_norm * user_norm)
+        if similarity > 0:
+            user_similarities.append((user.id, similarity))
+    return sorted(user_similarities, key=lambda x: x[1], reverse=True)[:k]
+
+def recommend_by_content(user_id, user_ratings, excluded_book_ids):
+    """基于内容的推荐：使用title, price, rating"""
+    liked_books = []
+    for book_id, rating in user_ratings.items():
+        if rating >= 4:
+            book = Book.query.get(book_id)
+            if book:
+                liked_books.append(book)
+    if not liked_books:
         return []
-    print('getting orders')
-    orders = Order.query.filter_by(id=user_id).all()
-    print('filtered')
-    purchased_book_ids = []
-    for order in orders:
-        for item in order.items:
-            purchased_book_ids.append(item.book_id)
-
-    # 基于内容的推荐
+    book_scores = []
     all_books = Book.query.all()
-    if purchased_book_ids:
-        purchased_books = Book.query.filter(Book.id.in_(purchased_book_ids)).all()
-        purchased_titles = [book.title for book in purchased_books]
-        all_titles = [book.title for book in all_books]
+    for book in all_books:
+        if book.id in excluded_book_ids:
+            continue
+        max_similarity = max(content_similarity(book, liked_book) for liked_book in liked_books)
+        
+        if max_similarity > 0:
+            book_scores.append((book.id, max_similarity))
+    return sorted(book_scores, key=lambda x: x[1], reverse=True)
 
-        vectorizer = TfidfVectorizer()
-        tfidf_matrix = vectorizer.fit_transform(all_titles)
-        purchased_tfidf = vectorizer.transform(purchased_titles)
+def content_similarity(book1, book2):
+    """计算两本书之间的内容相似度（title, price, rating）"""
+    title_sim = title_similarity(book1.title, book2.title)
+    price_sim = price_similarity(book1.price, book2.price)
+    rating_sim = rating_similarity(book1.rating, book2.rating)
+    return 0.5 * title_sim + 0.3 * price_sim + 0.2 * rating_sim
 
-        content_similarities = cosine_similarity(purchased_tfidf, tfidf_matrix)
-        content_scores = content_similarities.sum(axis=0)
+def title_similarity(title1, title2):
+    """计算标题相似度（基于关键词匹配）"""
+    words1 = set(jieba.cut(title1))
+    words2 = set(jieba.cut(title2))
+    words1 = {word for word in words1 if len(word) > 1}
+    words2 = {word for word in words2 if len(word) > 1}
+    if not words1 or not words2:
+        return 0
+    intersection = len(words1 & words2)
+    union = len(words1 | words2)
+    return intersection / union
+
+def price_similarity(price1, price2):
+    """计算价格相似度（归一化差异）"""
+    price1 = float(price1) if price1 is not None else 0.0
+    price2 = float(price2) if price2 is not None else 0.0
+    if not price1 or not price2:
+        return 0.5
+    max_price = max(price1, price2)
+    min_price = min(price1, price2)
+    diff_percent = 1 - (min_price / max_price)
+    return 1 - diff_percent
+
+def rating_similarity(rating1, rating2):
+    """计算评分相似度（归一化差异）"""
+    rating1 = float(rating1) if rating1 is not None else 0.0
+    rating2 = float(rating2) if rating2 is not None else 0.0
+    if not rating1 or not rating2:
+        return 0.5
+    max_diff = 5.0
+    actual_diff = abs(rating1 - rating2)
+    return 1 - (actual_diff / max_diff)
+
+def hybrid_recommendations(content_recs, collaborative_recs, content_weight=0.6):
+    """混合两种推荐结果"""
+    hybrid_scores = defaultdict(float)
+    for book_id, score in content_recs:
+        hybrid_scores[book_id] += score * content_weight
+    for book_id, score in collaborative_recs:
+        hybrid_scores[book_id] += score * (1 - content_weight)
+    return sorted(hybrid_scores.items(), key=lambda x: x[1], reverse=True)
+
+def get_top_rated_books_randomly(limit=5):
+    """获取评分最高的100本书并随机返回其中五本的ID"""
+    top_books = Book.query \
+        .join(Review, Book.id == Review.book_id) \
+        .group_by(Book.id) \
+        .having(func.count(Review.id) >= 3) \
+        .order_by(desc(func.avg(Review.rating))) \
+        .limit(100) \
+        .all()
+    top_book_ids = [book.id for book in top_books]
+    if len(top_book_ids) >= limit:
+        return random.sample(top_book_ids, limit)
     else:
-        content_scores = np.zeros(len(all_books))
-
-    # 基于协同过滤的推荐
-    user_book_matrix = {}
-    all_orders = Order.query.all()
-    for order in all_orders:
-        user_id = order.user_id
-        if user_id not in user_book_matrix:
-            user_book_matrix[user_id] = []
-        for item in order.items:
-            user_book_matrix[user_id].append(item.book_id)
-
-    similar_users = []
-    for other_user_id, other_books in user_book_matrix.items():
-        if other_user_id != user_id:
-            common_books = set(purchased_book_ids).intersection(set(other_books))
-            if common_books:
-                similar_users.append(other_user_id)
-
-    cf_scores = Counter()
-    for similar_user_id in similar_users:
-        for book_id in user_book_matrix[similar_user_id]:
-            cf_scores[book_id] += 1
-
-    # 合并两种推荐结果
-    final_scores = {}
-    for i, book in enumerate(all_books):
-        final_scores[book.id] = content_scores[i] + cf_scores[book.id]
-
-    # 排除用户已经购买过的书籍
-    for book_id in purchased_book_ids:
-        final_scores[book_id] = 0
-
-    # 按得分排序并返回前5本
-    sorted_books = sorted(final_scores.items(), key=lambda item: item[1], reverse=True)
-    top_5_books = [book_id for book_id, score in sorted_books[:5]]
-
-    return top_5_books
+        return top_book_ids
+    
+def book_recommendation(user_id, limit=5):
+    """
+    混合推荐系统：结合基于内容和协同过滤的推荐方法
+    """
+    user = get_user_by_id(user_id)
+    
+    if not user:
+        recommended_book_ids = get_top_rated_books_randomly()
+        return recommended_book_ids
+    orders = Order.query.filter_by(user_id=user_id).all()
+    reviews = Review.query.filter_by(user_id=user_id).all()
+    reviews_book_ids = [review.book_id for review in reviews]
+    purchased_book_ids = [item.book_id for order in orders for item in order.items]
+    all_browsed_book_ids = list(dict.fromkeys([*reviews_book_ids, *purchased_book_ids]))
+    user_ratings = {review.book_id: review.rating for review in reviews}
+    content_recommendations = recommend_by_content(user_id, user_ratings, all_browsed_book_ids)
+    collaborative_recommendations = recommend_by_collaborative_filtering(user_id, user_ratings, all_browsed_book_ids)
+    combined_recommendations = hybrid_recommendations(content_recommendations, collaborative_recommendations)
+    recommended_book_ids = [book_id for book_id, _ in combined_recommendations[:limit]]
+    recommended_books = Book.query.filter(Book.id.in_(recommended_book_ids)).all()
+    if len(recommended_book_ids) < 5 :
+         return get_top_rated_books_randomly()
+    print(recommended_books)
+    return recommended_book_ids
