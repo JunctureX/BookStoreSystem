@@ -7,7 +7,7 @@ api = Api(api_bp)
 from .auth.routes import AuthLogin, AuthRegister
 from .books.routes import BookList, BookDetail
 
-from .users.routes import UserList, UserDetail
+from .users.routes import UserList, UserDetail, UserRecommendation
 from .orders.routes import OrderList, OrderDetail
 
 from .admin.books import AdminBookList, AdminBookStock
@@ -19,6 +19,7 @@ api.add_resource(BookDetail, '/books/<int:book_id>')
 
 api.add_resource(UserList, '/users')
 api.add_resource(UserDetail, '/users/<int:user_id>')
+api.add_resource(UserRecommendation, '/user/recommendation')
 
 api.add_resource(OrderList, '/orders')
 api.add_resource(OrderDetail, '/orders/<int:order_id>')

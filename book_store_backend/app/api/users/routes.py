@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
 from app.service.user_service import (
-    get_all_users, get_user_by_id, create_user, update_user, delete_user
+    get_all_users, get_user_by_id, create_user, update_user, delete_user, book_recommendation
 )
 
 class UserList(Resource):
@@ -43,3 +43,9 @@ class UserDetail(Resource):
         if delete_user(user_id):
             return {"message": "User deleted successfully"}, 200
         return {"message": "Failed to delete user"}, 400
+
+class UserRecommendation(Resource):
+    def get(self, user_id):
+        recommendation_ids = book_recommendation(user_id)
+        return {"id": user_id, "recommendation_list": recommendation_ids}, 200
+    
