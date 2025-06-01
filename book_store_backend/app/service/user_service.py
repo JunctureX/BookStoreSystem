@@ -214,11 +214,7 @@ def book_recommendation(user_id, limit=5):
     return recommended_book_ids
 
 def deepseek_response(user_input):
-    import os
-    from azure.ai.inference import ChatCompletionsClient
-    from azure.ai.inference.models import SystemMessage, UserMessage
-    from azure.core.credentials import AzureKeyCredential
-    os.environ["GITHUB_TOKEN"] = "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"
+    #os.environ["GITHUB_TOKEN"] = "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"
     token = os.environ["GITHUB_TOKEN"] 
     endpoint = "https://models.github.ai/inference"
     model = "deepseek/DeepSeek-V3-0324"
@@ -228,7 +224,7 @@ def deepseek_response(user_input):
     )
     response = client.complete(
         messages=[
-            SystemMessage("你是图书销售综合管理与智能服务平台小助手，书籍信息基于豆瓣平台"),
+            SystemMessage("你是图书销售综合管理与智能服务平台小助手，书籍信息基于豆瓣平台，回复写成一段话的形式，简洁明了"),
             UserMessage(user_input),
         ],
         temperature=1.0,
