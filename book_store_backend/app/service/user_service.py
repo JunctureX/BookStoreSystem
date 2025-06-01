@@ -48,10 +48,13 @@ def delete_user(user_id):
 
 def book_recommendation(user_id):
     # 获取用户的历史购买书籍
+    print('recommendataion for :', user_id)
     user = get_user_by_id(user_id)
     if not user:
         return []
-    orders = Order.query.filter_by(user_id=user_id).all()
+    print('getting orders')
+    orders = Order.query.filter_by(id=user_id).all()
+    print('filtered')
     purchased_book_ids = []
     for order in orders:
         for item in order.items:

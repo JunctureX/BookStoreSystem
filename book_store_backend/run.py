@@ -27,9 +27,7 @@ migrate = Migrate(app, db)
 jwt = JWTManager(app)
 
 CORS(
-    app,
-    resources={r"/api/*": {"origins": Config.CORS_ORIGINS}},
-    supports_credentials=True  # 允许携带凭证（如 cookies, authorization headers）
+    app
 )
 
 

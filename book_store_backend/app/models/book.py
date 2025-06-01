@@ -5,11 +5,11 @@ from .category_records import category_records
 class Book(BaseModelMixin, db.Model):
     __tablename__ = "books"
     
-    ISBN = db.Column(db.String(20), unique=True, nullable=False)
+    isbn = db.Column(db.String(20), unique=True, nullable=False)
     title = db.Column(db.String(255), nullable=False)
     price = db.Column(DECIMAL(10, 2), nullable=False)
     author = db.Column(db.String(100), nullable=False)
-    publisher_id = db.Column(db.Integer, db.ForeignKey("publishers.publisher_id"), nullable=False)
+    publisher_id = db.Column(db.Integer, db.ForeignKey("publishers.id"), nullable=False)
     publish_date = db.Column(db.Date)
     stock_quantity = db.Column(db.Integer, nullable=False, default=0)
     price = db.Column(DECIMAL(10, 2))

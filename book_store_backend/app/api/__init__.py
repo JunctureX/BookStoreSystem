@@ -19,7 +19,7 @@ api.add_resource(BookDetail, '/books/<int:book_id>')
 
 api.add_resource(UserList, '/users')
 api.add_resource(UserDetail, '/users/<int:user_id>')
-api.add_resource(UserRecommendation, '/user/recommendation')
+api.add_resource(UserRecommendation, '/user/recommendation/<int:user_id>')
 
 api.add_resource(OrderList, '/orders')
 api.add_resource(OrderDetail, '/orders/<int:order_id>')

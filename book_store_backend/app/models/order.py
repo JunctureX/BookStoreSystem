@@ -12,7 +12,7 @@ class OrderStatus(Enum):
 class Order(BaseModelMixin, db.Model):
     __tablename__ = "orders"
     
-    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     order_date = db.Column(db.TIMESTAMP, server_default = func.now())
     total_amount = db.Column(DECIMAL(10, 2), nullable=False, default=0)
     status = db.Column(db.Enum(OrderStatus), default=OrderStatus.PENDING) 
