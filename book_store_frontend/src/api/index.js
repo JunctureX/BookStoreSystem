@@ -17,7 +17,7 @@ const http = axios.create({
 })
 
 http.interceptors.request.use(opt=>{
-    DEFAULT_HEADER.Authorization = store.state.token
+    DEFAULT_HEADER.Authorization = `Bearer ${store.state.token}`;
     Object.assign(opt.headers,DEFAULT_HEADER);
     return opt;
 })
@@ -63,17 +63,6 @@ const createRestfulAPI = (url)=>{
     }
 }
 
-
-export const user = createRestfulAPI('/user');
-
-export const author = createRestfulAPI('/author');
-
-export const book = createRestfulAPI('/book');
-
-export const book_copy = createRestfulAPI('/book_copy');
-
-export const borrow = createRestfulAPI('/borrow');
-
 export const auth = {
     login(data){
         return http.post("/auth/login",data,{})
@@ -83,8 +72,20 @@ export const auth = {
     }
 }
 
-export const return_bookcopy = (data) => {
-    return http.post("/return_book",data,{})
-}
+export const bookList = createRestfulAPI("/books");
+export const bookDetail = (bookId) => createRestfulAPI(`/books/${bookId}`);
+
+export const userList = createRestfulAPI("/users");
+
+export const userRecommendation = (userId) => {
+    return createRestfulAPI(`/user/recommendation/${userId}`);
+};
+
+
+export const orderList = createRestfulAPI("/orders");
+export const orderDetail = (orderId) => createRestfulAPI(`/orders/${orderId}`);
+export const adminBookList = createRestfulAPI("/admin/books");
+export const adminBookStock = (bookId) => createRestfulAPI(`/admin/books/${bookId}/stock`);
+export const deepseek = (userInput) => createRestfulAPI(`/user/deepseek/${userInput}`);
 
 export const upload_url = "/api/uploads"

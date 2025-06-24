@@ -4,8 +4,6 @@ import createPersistedState from 'vuex-persistedstate'
 const state_set = {
   token: '',
   username: '',
-  is_manage: false,
-  head_img: "",
   id:""
 }
 
@@ -39,8 +37,6 @@ export default createStore({
       ctx.commit('username',"")
       ctx.commit('id',"")
       ctx.commit('token',"")
-      ctx.commit('head_img',"")
-      ctx.commit('is_manage',false)
     },
     ...createActions()
   },

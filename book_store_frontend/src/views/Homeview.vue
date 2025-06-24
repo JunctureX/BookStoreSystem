@@ -4,12 +4,7 @@ import MenuBar from "@/conponents/MenuBar.vue";
 import Footer from "@/conponents/Footer.vue";
 import {onBeforeUpdate, computed} from "vue";
 import {useRoute, useRouter} from "vue-router";
-import UserView from "@/conponents/tables/UserView.vue";
-import AuthorView from "../conponents/tables/AuthorView.vue";
-import BookView from "../conponents/tables/BookView.vue";
-import BorrowView from "../conponents/tables/BorrowView.vue";
-import AboutWe from "../conponents/tables/AboutWe.vue";
-import BookCopyView from "@/conponents/tables/BookCopyView.vue";
+
 
 
 const route = useRoute();

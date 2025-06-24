@@ -1,26 +1,23 @@
 # book_store_backend/app/service/user_service.py
+
+from sklearn.metrics.pairwise import cosine_similarity
 from app.models import User, Book, Order, Review, db
 from werkzeug.security import generate_password_hash
-from collections import Counter
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
-from collections import defaultdict, Counter
-from sqlalchemy import func
-import math
-from collections import defaultdict, Counter
-from sqlalchemy import func
-import math
-import re
-import jieba
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+from collections import defaultdict
+from sqlalchemy import func, desc
+
+from app.config import Config
+
 import random
-from sqlalchemy import desc
-import os
+import jieba
+import math
+
 from azure.ai.inference import ChatCompletionsClient
 from azure.ai.inference.models import SystemMessage, UserMessage
 from azure.core.credentials import AzureKeyCredential
+
+
+
 
 def user_login(user_id, password_hash):
     return True
@@ -214,8 +211,7 @@ def book_recommendation(user_id, limit=5):
     return recommended_book_ids
 
 def deepseek_response(user_input):
-    os.environ["GITHUB_TOKEN"] = "****"
-    token = os.environ["GITHUB_TOKEN"] 
+    token = Config.GITHUB_TOKEN
     endpoint = "https://models.github.ai/inference"
     model = "deepseek/DeepSeek-V3-0324"
     client = ChatCompletionsClient(

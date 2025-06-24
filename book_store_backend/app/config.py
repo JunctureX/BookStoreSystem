@@ -9,19 +9,20 @@ class Config:
     # 应用配置
     DEBUG = True
     TESTING = False
-    SECRET_KEY = os.environ.get('SECRET_KEY', '789f2c8997334283a271999d8d183796')
+    SECRET_KEY = os.environ.get('SECRET_KEY')
     
     # 数据库配置
     SQLALCHEMY_DATABASE_URI = os.environ.get(
-        'DATABASE_URL', 
-        'postgresql://postgres:Zxy_234338@localhost:5432/bookstoredb'
+        'DATABASE_URL',
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_ECHO = False  # 调试时显示SQL语句
+    SQLALCHEMY_ECHO = True  # 调试时显示SQL语句
     
     # JWT配置
-    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', '689a2c997334283a271999d8d183796')
+    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
     JWT_ACCESS_TOKEN_EXPIRES = 3600  # 1小时
+    
+    GIT_HUB_TOKEN = os.environ.get('GITHUB_TOKEN')
     
     # 其他配置
     UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER', 'uploads')

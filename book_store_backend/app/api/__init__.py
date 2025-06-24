@@ -14,6 +14,7 @@ from .admin.books import AdminBookList, AdminBookStock
 
 api.add_resource(AuthLogin, '/auth/login')
 api.add_resource(AuthRegister, '/auth/register')
+
 api.add_resource(BookList, '/books')
 api.add_resource(BookDetail, '/books/<int:book_id>')
 
