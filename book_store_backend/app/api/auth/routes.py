@@ -28,14 +28,13 @@ class AuthRegister(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('username', required=True)
         parser.add_argument('password', required=True)
-        parser.add_argument('email', required=True)
         
         args = parser.parse_args()
         
         if User.query.filter_by(username=args['username']).first():
             return {'message': 'Username exists'}, 400
         
-        user = User(username=args['username'], email=args['email'])
+        user = User(username=args['username'])
         user.set_password(args['password'])
         user.save()
         

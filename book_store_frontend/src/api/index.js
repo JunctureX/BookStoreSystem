@@ -121,7 +121,10 @@ export const getOrdersPaginated = (page = 1, perPage = 20) => {
   return http.post('/orders/paginated', {'page':page, 'per_page':perPage});
 };
 
-// 新增用户信息更新 API
  export const updateUser = (data) => {
     return http.post('/users/update', data);
 };
+
+export const getReviewRatingStats = (bookId) => createRestfulAPI(`/bookreviews/${bookId}`);
+export const getReviewListPaginated = (bookId) => createRestfulAPI(`/bookreviewscontent/${bookId}`);
+export const createReview = (data) => http.post('/bookreviews/create', data);

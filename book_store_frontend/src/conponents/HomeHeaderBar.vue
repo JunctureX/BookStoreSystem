@@ -7,8 +7,6 @@ const route = useRoute()
 const store = useStore()
 const router = useRouter()
 
-console.log(route.path)
-
 const logout = ()=>{
   store.dispatch('reset')
   router.go(0)

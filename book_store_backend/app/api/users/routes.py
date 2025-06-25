@@ -51,13 +51,13 @@ class UserDetail(Resource):
 class UserRecommendation(Resource):
     def get(self, user_id):
         #return {"id": 101, "recommendation_list": ["test1", "test2"]}, 200
-        print("request for userid:", user_id)
+        # print("request for userid:", user_id)
         recommendation_ids = book_recommendation(user_id)
-        return {"id": user_id, "recommendation_list": recommendation_ids}, 200
+        return {"recommendation_list": recommendation_ids}, 200
 
 class Deepseek(Resource):
     def get(self, user_input):
-        print("Received input:", user_input)
+        # print("Received input:", user_input)
         response = deepseek_response(user_input)
         return {"response": response}, 200
 

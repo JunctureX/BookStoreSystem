@@ -16,13 +16,13 @@ from app.api import api_bp
 
 # 创建 Flask 应用
 app = Flask(__name__)
-print(f"TOKEN: {Config.GITHUB_TOKEN}")
+# print(f"TOKEN: {Config.GITHUB_TOKEN}")
 app.config.from_object(Config)
-print(app.config)
+# print(app.config)
 
 # 调试：打印数据库连接字符串
-print(f"Database URL: {app.config['SQLALCHEMY_DATABASE_URI']}")
-print(f"TOKEN: {app.config['GITHUB_TOKEN']}")
+# print(f"Database URL: {app.config['SQLALCHEMY_DATABASE_URI']}")
+# print(f"TOKEN: {app.config['GITHUB_TOKEN']}")
 
 # 初始化扩展
 db.init_app(app)
@@ -58,11 +58,11 @@ app.cli.add_command(user_cli)
 def create_admin(username, email, password):
     """创建管理员账户"""
     if User.query.filter_by(username=username).first():
-        print(f"错误: 用户名 '{username}' 已存在")
+        # print(f"错误: 用户名 '{username}' 已存在")
         return
     
     if User.query.filter_by(email=email).first():
-        print(f"错误: 邮箱 '{email}' 已存在")
+        # print(f"错误: 邮箱 '{email}' 已存在")
         return
     
     admin = User(
@@ -74,7 +74,7 @@ def create_admin(username, email, password):
     db.session.add(admin)
     db.session.commit()
     
-    print(f"管理员账户 '{username}' 创建成功!")
+    # print(f"管理员账户 '{username}' 创建成功!")
 
 # # 创建测试数据命令
 # @app.cli.command("create-test-data")

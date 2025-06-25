@@ -42,7 +42,6 @@ const store = createStore({
       ctx.commit('token', "")
       // 重置新变量
       ctx.commit('modifyid', -1)
-      ctx.commit('detailid', 92555)
     },
     ...createActions()
   },

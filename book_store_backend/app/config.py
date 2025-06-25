@@ -17,7 +17,7 @@ class Config:
     )
     SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:Zxy_234338@localhost:5432/bookstoredb'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_ECHO = True  # 调试时显示SQL语句
+    SQLALCHEMY_ECHO = False
     
     # JWT配置
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
@@ -30,8 +30,8 @@ class Config:
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB
         
 class DevelopmentConfig(Config):
-    DEBUG = True
-    SQLALCHEMY_ECHO = True
+    DEBUG = False
+    SQLALCHEMY_ECHO = False
 
 class ProductionConfig(Config):
     DEBUG = False

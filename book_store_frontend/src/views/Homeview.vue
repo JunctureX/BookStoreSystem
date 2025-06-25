@@ -29,8 +29,6 @@ let getQueryPage = computed(()=>{
   return props.type;
 })
 
-console.log('pagevalue: ', getQueryPage.value)
-
 onBeforeUpdate(()=>{
 })
 

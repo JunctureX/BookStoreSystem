@@ -6,7 +6,9 @@ api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
 
 from .auth.routes import AuthLogin, AuthRegister
-from .books.routes import BookList, BookDetail, SearchBooksByTitle, SearchBooksByISBN, BookListPaginated
+from .books.routes import BookList, BookDetail, SearchBooksByTitle, SearchBooksByISBN, BookListPaginated, ReviewRatingStats
+from app.api.books.routes import ReviewListPaginated
+from .books.create_review import CreateReview
 
 from .users.routes import UserList, UserDetail, UserRecommendation, Deepseek,UserListPaginated, UpdateUser
 from .orders.routes import OrderList, OrderDetail, CreateOrder, OrderListPaginated
@@ -25,6 +27,9 @@ api.add_resource(SearchBooksByTitle, '/books/search/title')
 api.add_resource(SearchBooksByISBN, '/books/search/isbn')
 api.add_resource(BookListPaginated, '/books/paginated')
 api.add_resource(OrderListPaginated, '/orders/paginated')
+api.add_resource(ReviewRatingStats, '/bookreviews/<int:book_id>')
+api.add_resource(ReviewListPaginated, '/bookreviewscontent/<int:book_id>')
+api.add_resource(CreateReview, '/bookreviews/create')
 
 api.add_resource(UserList, '/users')
 api.add_resource(UserDetail, '/users/<int:user_id>')
