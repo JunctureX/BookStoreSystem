@@ -29,14 +29,14 @@
       </el-table-column>
       <el-table-column label="订购总价">
         <template #default="{ row }">
-          {{ row.quantity * row.price }}
+          {{ (row.quantity * row.price).toFixed(2) }}
         </template>
       </el-table-column>
     </el-table>
     <el-button @click="addRow">订购更多图书</el-button>
     <el-button @click="submitOrder">提交订单</el-button>
     <div style="text-align: right; margin-top: 10px;">
-      <span style="color: #333;">订单总价: {{ calculateTotalPrice() }}</span>
+      <span style="color: #333;">订单总价: {{ (calculateTotalPrice()).toFixed(2) }}</span>
     </div>
   </div>
 </template>
