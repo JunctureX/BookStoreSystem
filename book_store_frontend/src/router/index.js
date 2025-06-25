@@ -3,8 +3,6 @@ import Home from "../views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
 import store from "@/store";
 
-import AdminBookListView from "@/views/admin/AdminBookList.vue";
-import AdminBookStockView from "@/views/admin/AdminBookStock.vue";
 const routes = [
   { 
     path: "/", 
@@ -22,17 +20,6 @@ const routes = [
     name: "login",
     component: LoginView,
     props: true
-  },
-,
-  {
-    path: "/admin/books",
-    name: "adminBookList",
-    component: AdminBookListView
-  },
-  {
-    path: "/admin/books/:bookId/stock",
-    name: "adminBookStock",
-    component: AdminBookStockView
   }
 ];
 

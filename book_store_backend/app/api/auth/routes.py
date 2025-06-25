@@ -10,11 +10,17 @@ class AuthLogin(Resource):
         args = parser.parse_args()
         
         user = User.query.filter_by(username=args['username']).first()
+        if user :
+            print('user:', user.username, args['password'])
+        else :
+            print('user not found')
         if not user or not user.check_password(args['password']):
+            print('validation failed')
             return {'message': 'Invalid credentials'}, 401
         
         access_token = create_access_token(identity=user.id)
         ### to do：
+        print('validation okay')
         return {'token': access_token, 'user_id': user.id}, 200
 
 class AuthRegister(Resource):

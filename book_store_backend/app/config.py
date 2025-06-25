@@ -15,6 +15,7 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         'DATABASE_URL',
     )
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:Zxy_234338@localhost:5432/bookstoredb'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = True  # 调试时显示SQL语句
     
