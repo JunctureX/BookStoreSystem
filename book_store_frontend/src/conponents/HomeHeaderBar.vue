@@ -18,6 +18,7 @@ const getTitle = (key)=>{
   switch (key) {
     case '/index/user' : return "用户管理"
     case '/index/book' : return "图书管理"
+    case '/index/bookdetail' : return "图书详情"
     case '/index/ai-helper' : return "AI助手"
     case '/index/create-order' : return "创建订单"
     case '/index/about' : return "关于我们"

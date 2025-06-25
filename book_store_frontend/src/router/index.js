@@ -4,14 +4,20 @@ import LoginView from "@/views/LoginView.vue";
 import store from "@/store";
 
 const routes = [
-  { 
-    path: "/", 
+  {
+    path: "/",
     name: "home",
     redirect: "/index/user"
   },
   {
     path: "/index/:type",
     name: "index",
+    component: Home,
+    props: true
+  },
+  {
+    path: "/index/modify/:id",
+    name: "modifyUser",
     component: Home,
     props: true
   },
@@ -28,14 +34,13 @@ const route = createRouter({
   routes,
 });
 
-route.beforeEach((to, from, next)=>{
-  console.log(to)
-  if(to.name === 'login' || store.state.token){
-    next()
-  }else{
-    next({name:'login',params:{login:"login"}})
+route.beforeEach((to, from, next) => {
+  console.log(to);
+  if (to.name === 'login' || store.state.token) {
+    next();
+  } else {
+    next({ name: 'login', params: { login: "login" } });
   }
+});
 
-})
-
-export default route
+export default route;

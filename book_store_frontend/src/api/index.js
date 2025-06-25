@@ -47,6 +47,12 @@ const createRestfulAPI = (url)=>{
                 headers: header
             })
         },
+        patch(params, data, header) {
+            return http.patch(url,data,{
+                params: params,
+                headers: header
+            })
+        },
         put(params, data, header) {
             return http.put(url,data,{
                 params: params,
@@ -73,9 +79,10 @@ export const auth = {
 }
 
 export const bookList = createRestfulAPI("/books");
-export const bookDetail = (bookId) => createRestfulAPI(`/books/${bookId}`);
+export const getBookDetail = (bookId) => createRestfulAPI(`/books/${bookId}`);
 
 export const userList = createRestfulAPI("/users");
+export const userDetail = (userId) => createRestfulAPI(`/users/${userId}`);
 
 export const userRecommendation = (userId) => {
     return createRestfulAPI(`/user/recommendation/${userId}`);
@@ -105,4 +112,16 @@ export const createOrder = (data) => {
 
 export const getUsersPaginated = (page = 1, perPage = 20) => {
   return http.post('/users/paginated', {'page':page, 'per_page':perPage});
+};
+
+export const getBooksPaginated = (page = 1, perPage = 20) => {
+  return http.post('/books/paginated', {'page':page, 'per_page':perPage});
+};
+export const getOrdersPaginated = (page = 1, perPage = 20) => {
+  return http.post('/orders/paginated', {'page':page, 'per_page':perPage});
+};
+
+// 新增用户信息更新 API
+ export const updateUser = (data) => {
+    return http.post('/users/update', data);
 };

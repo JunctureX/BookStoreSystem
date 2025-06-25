@@ -3,6 +3,7 @@ from app.service.order_service import (
     get_all_orders, get_order_by_id, create_order, update_order, delete_order
 )
 from sqlalchemy.exc import IntegrityError
+from app.models.order import Order
 
 class OrderList(Resource):
     def get(self):
@@ -55,3 +56,17 @@ class CreateOrder(Resource):
         except IntegrityError as e:
             return {"message": "Failed to create order: {}".format(str(e))}, 400
 
+class OrderListPaginated(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('per_page', type=int, default=20)
+        args = parser.parse_args()
+
+        orders = Order.query.paginate(page=args['page'], per_page=args['per_page'], error_out=False)
+        return {
+            'books': [{'id': order.id, 'user_id': order.user_id, 'order_date' : str(order.order_date),'total_amount' : str(order.total_amount),'status' : str(order.status),'shipping_address' : order.shipping_address,'payment_method' : order.payment_method } for order in orders.items],
+            'total': orders.total,
+            'pages': orders.pages,
+            'current_page': orders.page
+        }

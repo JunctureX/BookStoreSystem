@@ -3,6 +3,9 @@ from app.service.user_service import (
     get_all_users, get_user_by_id, create_user, update_user, delete_user, book_recommendation, deepseek_response,
 )
 from app.models.user import User, UserType
+from flask import request
+from flask_restful import Resource
+from app.models import User, db
 
 class UserList(Resource):
     def get(self):
@@ -25,7 +28,7 @@ class UserDetail(Resource):
     def get(self, user_id):
         user = get_user_by_id(user_id)
         if user:
-            return {"id": user.id, "username": user.username}
+            return {'id': user.id, 'username': user.username, 'email':user.email, 'phone':user.phone, 'user_type': '管理员' if user.user_type==UserType.admin else '顾客'}
         return {"message": "User not found"}, 404
 
     def put(self, user_id):
@@ -73,6 +76,37 @@ class UserListPaginated(Resource):
             'pages': users.pages,
             'current_page': users.page
         }
+
+class UpdateUser(Resource):
+    def post(self):
+        data = request.get_json()
+        user_id = data.get('id')
+        username = data.get('username')
+        password = data.get('password')
+        email = data.get('email')
+        phone = data.get('phone')
+
+        user = User.query.get(user_id)
+        if not user:
+            return {'message': '用户未找到'}, 404
+
+        if username:
+            user.username = username
+        if password:
+            user.password = password
+        if email:
+            user.email = email
+        if phone:
+            user.phone = phone
+
+        try:
+            db.session.commit()
+            return {'message': '用户信息更新成功'}, 200
+        except Exception as e:
+            db.session.rollback()
+            return {'message': f'更新失败: {str(e)}'}, 500
+
+
 
 
 

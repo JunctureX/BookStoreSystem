@@ -4,6 +4,7 @@ import json
 from app.service.book_service import (search_books_by_title, search_books_by_isbn, 
     get_all_books, get_book_by_id, create_book, update_book, delete_book
 )
+from app.models.book import Book
 
 class BookList(Resource):
     def get(self):
@@ -76,3 +77,19 @@ class BookDetail(Resource):
         if delete_book(book_id):
             return {"message": "Book deleted successfully"}, 200
         return {"message": "Failed to delete book"}, 400
+    
+class BookListPaginated(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('per_page', type=int, default=20)
+        args = parser.parse_args()
+
+        books = Book.query.paginate(page=args['page'], per_page=args['per_page'], error_out=False)
+        return {
+            'books': [{'id': book.id, 'title': book.title, 'author':book.author, 'publisher_id':book.publisher_id,
+                       'stock_quantity': book.stock_quantity, 'price': str(book.price), 'rating': str(book.rating)} for book in books.items],
+            'total': books.total,
+            'pages': books.pages,
+            'current_page': books.page
+        }

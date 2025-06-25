@@ -64,9 +64,9 @@ onBeforeMount(()=>{
         <el-icon><Collection /></el-icon>
         <span>订单管理</span>
       </el-menu-item>
-      <el-menu-item index="/index/stock">
+      <el-menu-item index="/index/bookdetail">
         <el-icon><Share /></el-icon>
-        <span>库存管理</span>
+        <span>图书详情</span>
       </el-menu-item>
       <el-menu-item index="/index/ai-helper">
         <el-icon><Location /></el-icon>

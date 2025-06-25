@@ -5,12 +5,13 @@ import Footer from "@/conponents/Footer.vue";
 import UserView from "@/conponents/tables/UserView.vue";
 import BookView from "@/conponents/tables/BookView.vue";
 import OrderView from "@/conponents/tables/OrderView.vue";
-import StockView from "@/conponents/tables/StockView.vue";
+import BookDetailView from "@/conponents/tables/BookDetailView.vue";
 import CreateOrderView from "@/conponents/tables/CreateOrderView.vue";
 import AIhelperView from "@/conponents/tables/AIhelperView.vue";
 import AboutWe from "@/conponents/tables/AboutWe.vue";
 import {onBeforeUpdate, computed} from "vue";
 import {useRoute, useRouter} from "vue-router";
+import ModifyUserView from '@/conponents/tables/ModifyUserView.vue';
 
 
 
@@ -28,33 +29,37 @@ let getQueryPage = computed(()=>{
   return props.type;
 })
 
+console.log('pagevalue: ', getQueryPage.value)
+
 onBeforeUpdate(()=>{
 })
 
-const getView = computed(()=>{
-  if(getQueryPage.value === 'user'){
+const getView = computed(() => {
+  if (getQueryPage.value === 'user') {
     return UserView;
   }
-  if(getQueryPage.value === 'book'){
+  if (getQueryPage.value === 'modify') {
+    return ModifyUserView;
+  }
+  if (getQueryPage.value === 'book') {
     return BookView;
   }
-  if(getQueryPage.value === 'order'){
+  if (getQueryPage.value === 'order') {
     return OrderView;
   }
-  if(getQueryPage.value === 'stock'){
-    return StockView;
+  if (getQueryPage.value === 'bookdetail') {
+    return BookDetailView;
   }
-  if(getQueryPage.value === 'ai-helper'){
+  if (getQueryPage.value === 'ai-helper') {
     return AIhelperView;
   }
-  if(getQueryPage.value === 'create-order'){
+  if (getQueryPage.value === 'create-order') {
     return CreateOrderView;
   }
-  if(getQueryPage.value === 'about'){
+  if (getQueryPage.value === 'about') {
     return AboutWe;
   }
-})
-
+});
 </script>
   
 <template>

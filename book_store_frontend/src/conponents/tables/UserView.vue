@@ -7,7 +7,12 @@
       <el-table-column prop="email" label="邮箱" />
       <el-table-column prop="phone" label="电话" />
       <el-table-column prop="user_type" label="角色" />
-      <!-- 可添加更多列 -->
+      <!-- 添加操作列 -->
+      <el-table-column label="操作">
+        <template #default="{ row }">
+          <el-button @click="goToModify(row.id)">修改</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
       @size-change="handleSizeChange"
@@ -24,6 +29,11 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getUsersPaginated } from '@/api/index'; // 导入新的分页 API
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+
+const router = useRouter();
+const store = useStore();
 
 const users = ref([]);
 const currentPage = ref(1);
@@ -48,6 +58,11 @@ const handleSizeChange = (newSize) => {
 const handleCurrentChange = (newPage) => {
   currentPage.value = newPage;
   fetchUsers();
+};
+
+const goToModify = (id) => {
+  store.dispatch('set_modifyid', id);
+  router.push(`/index/modify`);
 };
 
 onMounted(() => {
