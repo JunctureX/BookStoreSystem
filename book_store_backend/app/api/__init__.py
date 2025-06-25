@@ -8,13 +8,15 @@ api = Api(api_bp)
 from .auth.routes import AuthLogin, AuthRegister
 from .books.routes import BookList, BookDetail, SearchBooksByTitle, SearchBooksByISBN
 
-from .users.routes import UserList, UserDetail, UserRecommendation, Deepseek
+from .users.routes import UserList, UserDetail, UserRecommendation, Deepseek,UserListPaginated
 from .orders.routes import OrderList, OrderDetail, CreateOrder
 
 from .admin.books import AdminBookList, AdminBookStock
 
 api.add_resource(AuthLogin, '/auth/login')
 api.add_resource(AuthRegister, '/auth/register')
+
+api.add_resource(UserListPaginated, '/users/paginated')
 
 api.add_resource(BookList, '/books')
 api.add_resource(BookDetail, '/books/<int:book_id>')

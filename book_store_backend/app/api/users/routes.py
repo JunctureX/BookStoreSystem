@@ -2,6 +2,7 @@ from flask_restful import Resource, reqparse
 from app.service.user_service import (
     get_all_users, get_user_by_id, create_user, update_user, delete_user, book_recommendation, deepseek_response,
 )
+from app.models.user import User, UserType
 
 class UserList(Resource):
     def get(self):
@@ -56,4 +57,22 @@ class Deepseek(Resource):
         print("Received input:", user_input)
         response = deepseek_response(user_input)
         return {"response": response}, 200
+
+
+class UserListPaginated(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('per_page', type=int, default=20)
+        args = parser.parse_args()
+
+        users = User.query.paginate(page=args['page'], per_page=args['per_page'], error_out=False)
+        return {
+            'users': [{'id': user.id, 'username': user.username, 'email':user.email, 'phone':user.phone, 'user_type': '管理员' if user.user_type==UserType.admin else '顾客'} for user in users.items],
+            'total': users.total,
+            'pages': users.pages,
+            'current_page': users.page
+        }
+
+
 

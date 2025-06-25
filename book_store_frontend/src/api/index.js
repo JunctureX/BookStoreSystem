@@ -101,3 +101,8 @@ export const upload_url = "/api/uploads"
 export const createOrder = (data) => {
   return http.post('/orders/create', data);
 };
+
+
+export const getUsersPaginated = (page = 1, perPage = 20) => {
+  return http.post('/users/paginated', {'page':page, 'per_page':perPage});
+};

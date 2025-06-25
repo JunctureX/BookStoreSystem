@@ -1,35 +1,60 @@
 <template>
-    <el-card class="box-card">
-        <template #header>
-            <div class="card-header">
-                <span>About Us</span>
-                
-            </div>
-        </template>
-        <el-col>
-            <p class="content">
-                图书管理系统,基于flask Restful API设计和vite+vue3的系统,组件库来自Element Plus。
-                由西安交通大学林圣翔与仲星焱制作。
-            </p>
-        </el-col>
-    </el-card>
+  <div>
+    <el-table :data="users" style="width: 100%">
+      <!-- 假设 User 表有 id、name、email 等字段，可按需修改 -->
+      <el-table-column prop="id" label="ID" />
+      <el-table-column prop="username" label="用户名" />
+      <el-table-column prop="email" label="邮箱" />
+      <el-table-column prop="phone" label="电话" />
+      <el-table-column prop="user_type" label="角色" />
+      <!-- 可添加更多列 -->
+    </el-table>
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage"
+      :page-sizes="[10, 20, 30, 40]"
+      :page-size="pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+    />
+  </div>
 </template>
 
-
 <script setup>
+import { ref, onMounted } from 'vue';
+import { getUsersPaginated } from '@/api/index'; // 导入新的分页 API
 
+const users = ref([]);
+const currentPage = ref(1);
+const pageSize = ref(20);
+const total = ref(0);
+
+const fetchUsers = async () => {
+  try {
+    const response = await getUsersPaginated(currentPage.value, pageSize.value);
+    users.value = response.data.users;
+    total.value = response.data.total;
+  } catch (error) {
+    console.error('获取用户列表失败:', error);
+  }
+};
+
+const handleSizeChange = (newSize) => {
+  pageSize.value = newSize;
+  fetchUsers();
+};
+
+const handleCurrentChange = (newPage) => {
+  currentPage.value = newPage;
+  fetchUsers();
+};
+
+onMounted(() => {
+  fetchUsers();
+});
 </script>
 
-
-<style lang="scss" scoped>
-
-.card-header{
-    display: flex;
-    align-items: flex-start;
-}
-
-.content{
-    text-align: start;
-}
-
+<style scoped>
+/* 可添加自定义样式 */
 </style>
