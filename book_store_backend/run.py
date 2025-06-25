@@ -18,6 +18,7 @@ from app.api import api_bp
 app = Flask(__name__)
 print(f"TOKEN: {Config.GITHUB_TOKEN}")
 app.config.from_object(Config)
+print(app.config)
 
 # 调试：打印数据库连接字符串
 print(f"Database URL: {app.config['SQLALCHEMY_DATABASE_URI']}")

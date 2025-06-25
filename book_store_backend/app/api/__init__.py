@@ -1,4 +1,5 @@
 from flask import Blueprint
+from flask import request
 from flask_restful import Api
 
 api_bp = Blueprint('api', __name__)
@@ -8,7 +9,7 @@ from .auth.routes import AuthLogin, AuthRegister
 from .books.routes import BookList, BookDetail, SearchBooksByTitle, SearchBooksByISBN
 
 from .users.routes import UserList, UserDetail, UserRecommendation, Deepseek
-from .orders.routes import OrderList, OrderDetail
+from .orders.routes import OrderList, OrderDetail, CreateOrder
 
 from .admin.books import AdminBookList, AdminBookStock
 
@@ -27,6 +28,7 @@ api.add_resource(Deepseek, '/user/deepseek/<string:user_input>')
 
 api.add_resource(OrderList, '/orders')
 api.add_resource(OrderDetail, '/orders/<int:order_id>')
+api.add_resource(CreateOrder, '/orders/create')
 
 api.add_resource(AdminBookList, '/admin/books')
 api.add_resource(AdminBookStock, '/admin/books/<int:book_id>/stock')

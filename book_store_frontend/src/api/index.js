@@ -89,19 +89,15 @@ export const adminBookStock = (bookId) => createRestfulAPI(`/admin/books/${bookI
 export const deepseek = (userInput) => createRestfulAPI(`/user/deepseek/${userInput}`);
 
 export const searchBooksByTitle = (titleSubstring) => {
-    return http.get('/books/search/title', {
-        params: {
-            title_substring: titleSubstring
-        }
-    });
+    return http.post('/books/search/title', { title_substring: titleSubstring });
 };
 
 export const searchBooksByISBN = (isbnSubstring) => {
-    return http.get('/books/search/isbn', {
-        params: {
-            isbn_substring: isbnSubstring
-        }
-    });
+    return http.post('/books/search/isbn', { isbn_substring: isbnSubstring });
 };
 
 export const upload_url = "/api/uploads"
+
+export const createOrder = (data) => {
+  return http.post('/orders/create', data);
+};
