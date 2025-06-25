@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
 from app.service.user_service import (
-    get_all_users, get_user_by_id, create_user, update_user, delete_user, book_recommendation, deepseek_response,
+    get_all_users, get_user_by_id, create_user, update_user, delete_user, book_recommendation, deepseek_response, get_user_count,
 )
 from app.models.user import User, UserType
 from flask import request
@@ -106,7 +106,10 @@ class UpdateUser(Resource):
             db.session.rollback()
             return {'message': f'更新失败: {str(e)}'}, 500
 
-
+class UserCount(Resource):
+    def get(self):
+        count = get_user_count()
+        return count
 
 
 

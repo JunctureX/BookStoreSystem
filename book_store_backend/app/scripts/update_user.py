@@ -5,10 +5,10 @@ conn = None
 
 # 获取数据库配置
 db_config = {
-    'user': 'postgres',
-    'password': 'Zxy_234338',
+    'user': 'linshengxiang',
+    'password': 'Password!2025',
     'host': 'localhost',
-    'port': '5432',
+    'port': '5433',
     'database': 'bookstoredb'
 }
 
