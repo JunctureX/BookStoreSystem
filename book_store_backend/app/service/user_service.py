@@ -8,6 +8,7 @@ from sqlalchemy import func, desc
 
 
 from app.config import Config
+from app.models import User, UserType
 
 import random
 import jieba
@@ -245,3 +246,7 @@ def deepseek_response(user_input):
     print(response.choices[0].message.content)
     return response.choices[0].message.content
     
+def get_user_count():
+    admin_count = User.query.filter_by(user_type=UserType.admin).count()
+    customer_count = User.query.filter_by(user_type=UserType.customer).count()
+    return {'admin_count': admin_count, 'customer_count': customer_count}

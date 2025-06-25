@@ -15,6 +15,8 @@ from .orders.routes import OrderList, OrderDetail, CreateOrder, OrderListPaginat
 
 from .admin.books import AdminBookList, AdminBookStock
 
+from .users.routes import UserList, UserDetail, UserRecommendation, Deepseek, UserCount
+
 api.add_resource(AuthLogin, '/auth/login')
 api.add_resource(AuthRegister, '/auth/register')
 
@@ -42,3 +44,5 @@ api.add_resource(CreateOrder, '/orders/create')
 
 api.add_resource(AdminBookList, '/admin/books')
 api.add_resource(AdminBookStock, '/admin/books/<int:book_id>/stock')
+
+api.add_resource(UserCount, '/users/count')
