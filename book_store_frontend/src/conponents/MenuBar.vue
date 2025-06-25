@@ -72,6 +72,10 @@ onBeforeMount(()=>{
         <el-icon><Location /></el-icon>
         <span>AI助手</span>
       </el-menu-item>
+      <el-menu-item index="/index/create-order">
+        <el-icon><Collection /></el-icon>
+        <span>创建订单</span>
+      </el-menu-item>
       <el-menu-item index="/index/about">
         <el-icon><Position /></el-icon>
         <span>关于我们</span>

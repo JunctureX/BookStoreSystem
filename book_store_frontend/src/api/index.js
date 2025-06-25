@@ -12,7 +12,7 @@ const DEFAULT_HEADER = {
 
 const http = axios.create({
     baseURL:import.meta.env.VITE_APP_BASE_API,
-    timeout:10*1000,
+    timeout:60*1000,
     withCredentials:true,
 })
 
@@ -87,5 +87,21 @@ export const orderDetail = (orderId) => createRestfulAPI(`/orders/${orderId}`);
 export const adminBookList = createRestfulAPI("/admin/books");
 export const adminBookStock = (bookId) => createRestfulAPI(`/admin/books/${bookId}/stock`);
 export const deepseek = (userInput) => createRestfulAPI(`/user/deepseek/${userInput}`);
+
+export const searchBooksByTitle = (titleSubstring) => {
+    return http.get('/books/search/title', {
+        params: {
+            title_substring: titleSubstring
+        }
+    });
+};
+
+export const searchBooksByISBN = (isbnSubstring) => {
+    return http.get('/books/search/isbn', {
+        params: {
+            isbn_substring: isbnSubstring
+        }
+    });
+};
 
 export const upload_url = "/api/uploads"

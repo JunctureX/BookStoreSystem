@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from app.service.book_service import (
+from app.service.book_service import (search_books_by_title, search_books_by_isbn, 
     get_all_books, get_book_by_id, create_book, update_book, delete_book
 )
 
@@ -23,6 +23,22 @@ class BookList(Resource):
         if new_book:
             return {"id": new_book.id, "title": new_book.title}, 201
         return {"message": "Failed to create book"}, 400
+
+class SearchBooksByTitle(Resource):
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('title_substring', type=str, required=True)
+        args = parser.parse_args()
+        books = search_books_by_title(args['title_substring'])
+        return [{'id': book.id, 'title': book.title, 'isbn': book.isbn} for book in books]
+
+class SearchBooksByISBN(Resource):
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('isbn_substring', type=str, required=True)
+        args = parser.parse_args()
+        books = search_books_by_isbn(args['isbn_substring'])
+        return [{'id': book.id, 'title': book.title, 'isbn': book.isbn} for book in books]
 
 class BookDetail(Resource):
     def get(self, book_id):

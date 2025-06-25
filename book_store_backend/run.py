@@ -16,10 +16,12 @@ from app.api import api_bp
 
 # 创建 Flask 应用
 app = Flask(__name__)
+print(f"TOKEN: {Config.GITHUB_TOKEN}")
 app.config.from_object(Config)
 
 # 调试：打印数据库连接字符串
 print(f"Database URL: {app.config['SQLALCHEMY_DATABASE_URI']}")
+print(f"TOKEN: {app.config['GITHUB_TOKEN']}")
 
 # 初始化扩展
 db.init_app(app)

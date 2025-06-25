@@ -23,12 +23,12 @@ class Config:
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
     JWT_ACCESS_TOKEN_EXPIRES = 3600  # 1小时
     
-    GIT_HUB_TOKEN = os.environ.get('GITHUB_TOKEN')
-    
+    GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
+    GITHUB_TOKEN = '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'
     # 其他配置
     UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER', 'uploads')
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB
-
+        
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_ECHO = True

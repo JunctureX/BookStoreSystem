@@ -6,6 +6,7 @@ import UserView from "@/conponents/tables/UserView.vue";
 import BookView from "@/conponents/tables/BookView.vue";
 import OrderView from "@/conponents/tables/OrderView.vue";
 import StockView from "@/conponents/tables/StockView.vue";
+import CreateOrderView from "@/conponents/tables/CreateOrderView.vue";
 import AIhelperView from "@/conponents/tables/AIhelperView.vue";
 import AboutWe from "@/conponents/tables/AboutWe.vue";
 import {onBeforeUpdate, computed} from "vue";
@@ -45,6 +46,9 @@ const getView = computed(()=>{
   }
   if(getQueryPage.value === 'ai-helper'){
     return AIhelperView;
+  }
+  if(getQueryPage.value === 'create-order'){
+    return CreateOrderView;
   }
   if(getQueryPage.value === 'about'){
     return AboutWe;

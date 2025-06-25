@@ -212,6 +212,7 @@ def book_recommendation(user_id, limit=5):
 
 def deepseek_response(user_input):
     token = Config.GITHUB_TOKEN
+    print('token:',token)
     endpoint = "https://models.github.ai/inference"
     model = "deepseek/DeepSeek-V3-0324"
     client = ChatCompletionsClient(
